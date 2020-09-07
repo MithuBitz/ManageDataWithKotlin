@@ -1,4 +1,4 @@
-package com.example.androiddata.utilities
+package com.example.managedata.utilities
 
 import android.content.Context
 

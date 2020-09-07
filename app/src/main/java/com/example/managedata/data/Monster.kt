@@ -1,4 +1,4 @@
-package com.example.androiddata.data
+package com.example.managedata.data
 
 data class Monster (
     val monsterName: String,

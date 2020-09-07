@@ -1,8 +1,8 @@
-package com.example.androiddata
+package com.example.managedata
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.androiddata.ui.main.MainFragment
+import com.example.managedata.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
