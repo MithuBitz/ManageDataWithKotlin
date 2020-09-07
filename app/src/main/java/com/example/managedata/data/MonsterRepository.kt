@@ -1,26 +1,30 @@
-package com.example.managedata.data
+package com.example.androiddata.data
 
+import android.app.Application
 import android.content.Context
-import android.util.Log
-import com.example.managedata.LOG_TAG
-import com.example.managedata.utilities.FileHelper
+import androidx.lifecycle.MutableLiveData
+import com.example.androiddata.utilities.FileHelper
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
-class MonsterRepository {
+class MonsterRepository(val app: Application) {
+
+    val monsterData = MutableLiveData<List<Monster>>()
 
     private val listType = Types.newParameterizedType(
         List::class.java, Monster::class.java
     )
 
-    fun getMonsterData(context : Context) : List<Monster>{
-        val text = FileHelper.getTextFromAssets(context, "monster_data.json")
-        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-        val adapter: JsonAdapter<List<Monster>> = moshi.adapter(listType)
-        return adapter.fromJson(text) ?: emptyList()
+    init {
+        getMonsterData()
+    }
 
-
+    fun getMonsterData() {
+        val text = FileHelper.getTextFromAssets(app, "monster_data.json")
+        val moshi = Moshi.Builder().build()
+        val adapter: JsonAdapter<List<Monster>> =
+            moshi.adapter(listType)
+        monsterData.value = adapter.fromJson(text) ?: emptyList()
     }
 }

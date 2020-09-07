@@ -1,22 +1,16 @@
-package com.example.managedata.ui.main
+package com.example.androiddata.ui.main
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import com.example.managedata.LOG_TAG
-import com.example.managedata.R
-import com.example.managedata.data.Monster
+import com.example.androiddata.R
+import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
 
     private lateinit var viewModel: MainViewModel
 
@@ -25,17 +19,18 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val monster = Monster("Bob", "myfile", "a caption",
-            "a description", .19, 3)
-        Log.i(LOG_TAG, monster.toString())
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.monsterData.observe(viewLifecycleOwner, Observer
+        {
+            val monsterNames = StringBuilder()
+            for (monster in it) {
+                monsterNames.append(monster.monsterName)
+                    .append("\n")
+            }
+            message.text = monsterNames
+        })
 
         return inflater.inflate(R.layout.main_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 }

@@ -1,9 +1,7 @@
-package com.example.managedata.data
-
-import com.squareup.moshi.Json
+package com.example.androiddata.data
 
 data class Monster (
-    @Json(name = "monsterName") val name: String,
+    val monsterName: String,
     val imageFile: String,
     val caption: String,
     val description: String,
