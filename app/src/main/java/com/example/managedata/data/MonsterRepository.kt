@@ -1,7 +1,6 @@
 package com.example.managedata.data
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.example.managedata.utilities.FileHelper
 import com.squareup.moshi.JsonAdapter
