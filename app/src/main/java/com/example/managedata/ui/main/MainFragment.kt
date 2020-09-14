@@ -7,30 +7,32 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.managedata.R
 import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
+        val view = inflater.inflate(R.layout.main_fragment, container, false)
+        recyclerView = view.findViewById(R.id.recyclerView)
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.monsterData.observe(viewLifecycleOwner, Observer
         {
-            val monsterNames = StringBuilder()
-            for (monster in it) {
-                monsterNames.append(monster.monsterName)
-                    .append("\n")
-            }
-            message.text = monsterNames
+            val adapter = MainRecyclerAdapter(requireContext(), it)
+            recyclerView.adapter = adapter
         })
 
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        return view
+
     }
 
 }
