@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.managedata.R
 import com.example.managedata.data.Monster
 import kotlinx.android.synthetic.main.monster_grid_item.view.*
@@ -40,6 +41,9 @@ class MainRecyclerAdapter(val context: Context, val monster: List<Monster>) :
                 it.contentDescription= monster.monsterName
             }
             ratingBar?. rating = monster.scariness.toFloat()
+            Glide.with(context)
+                .load(monster.thumbnailUrl)
+                .into(monsterImage)
         }
     }
 
