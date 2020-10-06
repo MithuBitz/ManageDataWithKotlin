@@ -1,19 +1,17 @@
 package com.example.managedata.ui.detail
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import com.example.managedata.LOG_TAG
 import com.example.managedata.R
+import com.example.managedata.databinding.FragmentDetailBinding
 import com.example.managedata.ui.shared.SharedViewModel
 
 
@@ -40,12 +38,23 @@ class DetailFragment : Fragment() {
 
         //Initialize the viewModel
         viewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
-        viewModel.selectedMonster.observe(viewLifecycleOwner, Observer {
+
+        //If databinding is used then this observer not required
+        /*viewModel.selectedMonster.observe(viewLifecycleOwner, Observer {
             Log.i(LOG_TAG, "Selected Monster: ${it.monsterName}")
-        })
+        })*/
+
+        val binding = FragmentDetailBinding.inflate(
+            inflater, container, false
+        )
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        return binding.root
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        //It is not use in Databinding
+        //return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
