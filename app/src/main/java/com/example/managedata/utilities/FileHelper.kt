@@ -1,6 +1,9 @@
 package com.example.managedata.utilities
 
+import android.app.Application
 import android.content.Context
+import java.io.File
+import java.nio.charset.Charset
 
 class FileHelper {
     companion object {
@@ -18,6 +21,11 @@ class FileHelper {
                     it.readText()
                 }
             }
+        }
+
+        fun saveTextToFile(app: Application, json: String?) {
+            val file = File(app.filesDir, "monster.json")
+            file.writeText(json ?: "", Charsets.UTF_8)
         }
     }
 }
