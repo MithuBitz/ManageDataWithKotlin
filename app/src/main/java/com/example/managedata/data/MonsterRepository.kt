@@ -1,10 +1,13 @@
 package com.example.managedata.data
 
+import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.example.managedata.LOG_TAG
 import com.example.managedata.WEB_SERVICE_URL
@@ -64,11 +67,14 @@ class MonsterRepository(val app: Application) {
 
     //Save the server data to local store
     private fun saveDataToCache(monsterData: List<Monster>) {
-        val moshi = Moshi.Builder().build()
-        val listType = Types.newParameterizedType(List::class.java, Monster::class.java)
-        val adapter: JsonAdapter<List<Monster>> = moshi.adapter(listType)
-        val json = adapter.toJson(monsterData)
-        FileHelper.saveTextToFile(app, json)
+        if (ContextCompat.checkSelfPermission(app, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+            PackageManager.PERMISSION_GRANTED) {
+            val moshi = Moshi.Builder().build()
+            val listType = Types.newParameterizedType(List::class.java, Monster::class.java)
+            val adapter: JsonAdapter<List<Monster>> = moshi.adapter(listType)
+            val json = adapter.toJson(monsterData)
+            FileHelper.saveTextToFile(app, json)
+        }
     }
 
     //Read data from the internel storage if available

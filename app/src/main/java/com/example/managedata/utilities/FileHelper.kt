@@ -27,13 +27,13 @@ class FileHelper {
             //This line helps to store data in local storage
             //val file = File(app.filesDir, "monster.json")
             //This line helps to store data internaly in cache memory
-            val file = File(app.cacheDir, "monster.json")
+            val file = File(app.getExternalFilesDir("monster"), "monster.json")
             file.writeText(json ?: "", Charsets.UTF_8)
         }
 
         //Read the data if it is exist in local storage or cache otherwise download from the web
         fun readTextFile(app: Application): String? {
-            val file = File(app.cacheDir, "monster.json")
+            val file = File(app.getExternalFilesDir("monster"), "monster.json")
             return if (file.exists()) {
                 file.readText()
             } else null
