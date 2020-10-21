@@ -1,8 +1,13 @@
 package com.example.managedata.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.managedata.IMAGE_BASE_URL
 
+@Entity(tableName = "monsters")
 data class Monster (
+    @PrimaryKey(autoGenerate = true)
+    val monsterId: Int,
     val monsterName: String,
     val imageFile: String,
     val caption: String,
