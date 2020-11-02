@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.WorkerThread
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
@@ -14,31 +15,51 @@ import com.example.managedata.WEB_SERVICE_URL
 import com.example.managedata.utilities.FileHelper
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MonsterRepository(val app: Application) {
 
     val monsterData = MutableLiveData<List<Monster>>()
+    //Create an instace of Dao
+    private val monsterDao = MonsterDatabase.getDatabase(app).monsterDao()
 
     init {
-        val data = readDataFromCache()
+        /*val data = readDataFromCache()
         if (data.isEmpty()){
             refreshDataFromWeb()
         } else {
             monsterData.value = data
             Log.i(LOG_TAG, "Using Local data")
-        }
+        }*/
+        CoroutineScope(Dispatchers.IO).launch {
+            //Get data from the database
+            val data = monsterDao.getAll()
+            if (data.isEmpty()) { // if data is not available on the database
+                callWebService()
+            } else {
+                monsterData.postValue(data) //.value is not use in coroutine
+                //Main thread elements like Toast is not call directly on coroutine scope or background
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(app, "Useing Local Data", Toast.LENGTH_LONG).show()
+                }
+            }
 
+        }
     }
 
     @WorkerThread
     suspend fun callWebService() {
         if (networkAvailable()) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(app, "Useing remote Data", Toast.LENGTH_LONG).show()
+            }
             Log.i(LOG_TAG, "Calling Webservice")
             val retrofit = Retrofit.Builder()
                 .baseUrl(WEB_SERVICE_URL)
@@ -47,7 +68,11 @@ class MonsterRepository(val app: Application) {
             val service = retrofit.create(MonsterServices::class.java)
             val serviceData = service.getMonsterData().body() ?: emptyList()
             monsterData.postValue(serviceData)
-            saveDataToCache(serviceData)
+            //for useing cache data
+            //saveDataToCache(serviceData)
+            //For useing room Database data
+            monsterDao.deleteAll()
+            monsterDao.insertMonsters(serviceData)
         }
     }
 

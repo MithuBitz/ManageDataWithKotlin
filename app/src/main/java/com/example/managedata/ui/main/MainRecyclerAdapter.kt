@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.managedata.R
 import com.example.managedata.data.Monster
+import com.example.managedata.utilities.PrefsHelper
 import kotlinx.android.synthetic.main.monster_grid_item.view.*
 
 class MainRecyclerAdapter(val context: Context, val monster: List<Monster>, val itemListener: MonsterItemListener) :
@@ -22,7 +23,13 @@ class MainRecyclerAdapter(val context: Context, val monster: List<Monster>, val 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.monster_grid_item, parent,false)
+        val layoutStyle = PrefsHelper.getItemType(parent.context)
+        val layoutId = if (layoutStyle == "grid") {
+            R.layout.monster_grid_item
+        } else {
+            R.layout.monster_list_item
+        }
+        val view = inflater.inflate(layoutId, parent,false)
         return ViewHolder(view)
     }
 
