@@ -31,5 +31,5 @@
     <activity
         android:id="@+id/settingsActivity"
         android:name="com.example.managedata.SettingsActivity"
-        android:label="SettingsActivity" />
+        android:label="Settings" />
 </navigation>

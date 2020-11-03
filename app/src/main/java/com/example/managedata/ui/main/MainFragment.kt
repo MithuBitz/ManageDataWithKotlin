@@ -70,6 +70,10 @@ class MainFragment : Fragment(),
             swipeLayout.isRefreshing = false
         })
 
+        viewModel.activityTitle.observe(viewLifecycleOwner, Observer {
+            requireActivity().title = it
+        })
+
         return view
 
     }
@@ -102,6 +106,11 @@ class MainFragment : Fragment(),
             }
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateActivityTitle()
     }
 
 }
