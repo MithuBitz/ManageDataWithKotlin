@@ -97,6 +97,9 @@ class MainFragment : Fragment(),
                 recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 recyclerView.adapter = adapter
             }
+            R.id.actionSettings -> {
+                navController.navigate(R.id.settingsActivity)
+            }
         }
         return true
     }
